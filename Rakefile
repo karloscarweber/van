@@ -10,16 +10,20 @@ require 'open3'
 require 'van'
 require 'van/version'
 
-# RSpec::Core::RakeTask.new(:spec)
+module Rake
+TESTOPTIONS = {}
+end
 
-# task default: :spec
+TESTOPTIONS = {}
+Rake::TESTOPTIONS[:verbose] = false
 
-task :default => :test
 task :default => :test
 task :test => 'test:all'
 
 namespace 'test' do
-	Rake::TestTask.new('all') do |t|
+
+	# all Tests
+	Rake::TestTask.new('all') do |t, args|
 		t.libs << 'test'
 		t.libs.push 'lib'
 		t.test_files = FileList['test/van_*.rb']

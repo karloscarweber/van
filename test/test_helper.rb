@@ -1,8 +1,6 @@
 $:.unshift File.dirname(__FILE__) + '/../lib'
 $:.unshift File.dirname(__FILE__) + '/../' # I think this will let us see db folder
 
-# $VERBOSE = nil
-
 # test_helper.rb
 begin
 	require 'rubygems'
@@ -21,6 +19,7 @@ require 'fileutils'
 
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
 
+$VERBOSE = nil
 
 # Useful functions from guidebook,
 # Used to set up the environment a bit for a test
@@ -171,7 +170,6 @@ TXT
 			database = db_loc + "/" + database
 		end
 
-
 		write 'db/config.kdl', <<-TXT
 // config.kdl
 database {
@@ -266,7 +264,7 @@ class TestCase < MiniTest::Test
 		assert_equal(code, last_response.status)
 	end
 
-	def test_silly; end
+	# def test_silly; end
 
 end
 

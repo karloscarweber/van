@@ -51,7 +51,6 @@ module Van
 		}
 	end
 
-
 	def self.setup(app, *a, &block)
 		# Puts the Base Class into your apps' Models module.
 		app::Models.module_eval $SEQUEL_TO_BASE

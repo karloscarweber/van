@@ -4,6 +4,7 @@
 require 'test_helper'
 
 $:.unshift File.dirname(__FILE__) + '../../'
+ENV["environment"] = "development"
 
 begin
 
@@ -29,12 +30,17 @@ begin
 
 		# Test if the Van gear was included in the App.
 		def test_gear_was_packed
-			assert app.include?(Van), "Here is the packed gear: #{app.gear}. Notice that it's not Van. Like where it at?"
+			assert app.gear.include?(Van), "Here is the packed gear: #{app.gear}. Notice that it's not Van. Like where it at?"
+		end
+
+		# Tests that
+		def test_van_is_ancestor
+			assert app.ancestors.include?(Van), "Sorry but for some reason Van is not an ancestor: #{app.ancestors}."
 		end
 
 	end
 rescue => error
-	warn "Skipping PackedUP tests: "
+	warn "Skipping ItLoads tests: "
 	warn "  Error: #{error}"
 end
 
