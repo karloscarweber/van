@@ -4,64 +4,74 @@
 
 require 'test_helper'
 
-$:.unshift File.dirname(__FILE__) + '../../'
-ENV["environment"] = "development"
+# begin
 
-begin
+	ENV["environment"] = "development"
 
-	Camping.goes :Defaults
-	Defaults.pack(Van)
+	$:.unshift File.dirname(__FILE__) + '../../'
+
+	# Camping.goes :Defaults
+
+	module Defaults
+		# pack(Van)
+	end
 
 	class Defaults::Test < TestCase
 		include CommandLineCommands
+		include TestCaseReloader
+		BASE = File.expand_path('../apps/defaults', __FILE__)
 
-		# leaving these commented out so that it's clear to me where to put setup and teardown stuff when the time arises.
+		def file; BASE + '.rb' end
+
 		def setup
+			set_name :Defaults
 			move_to_tmp()
+			write_rakefile()
 
-			write_good_kdl
-			@kdl = Van.parse_kdl("db/config.kdl")
-
+			super
 		end
 
 		def teardown
 			leave_tmp()
+			super
 		end
 
 		def test_it_loads_defaults
-			assert app.options.has_key?(:database_settings), "We don't even have the database settings."
+			reloader.reload!
+			app.pack Van
+			assert app.options.has_key?(:database_settings), "We don't even have the database settings. #{app}"
 			dbs = app.options[:database_settings]
 			assert dbs[:adapter] == 'sqlite3', "Database adapter is wrong. #{ dbs[:adapter]}"
 			assert dbs[:database] == 'db/camping.db', "Default database name is wrong. #{ dbs[:database]}"
 			assert dbs[:host] == 'localhost', "Default host is wrong. #{ dbs[:host]}"
-			assert dbs[:pool] == 5, "Default database pool is wrong. #{ dbs[:pool]}"
+			assert dbs[:max_connections] == 5, "Default database max_connections is wrong. #{ dbs[:max_connections]}"
 		end
 
 		def test_it_loads_kdl_defaults
+			reloader.reload!
+			write_good_kdl(Dir.pwd)
+			@kdl = Van.parse_kdl("db/config.kdl")
 			# First test if we're even getting kdl back.
 			assert_equal 'KDL::Document', @kdl.class.to_s, "The returned object is nil, or at least it's not of class KDL::Document, Actual: #{@kdl.class.to_s}"
 		end
-
-
-# 		# Test if Sequel was even loaded
-# 		def test_sequel_was_loaded
-# 			assert !Sequel.nil?, "Sequel Gem was not loaded."
-# 		end
 #
-# 		# Test if the Van gear was included in the App.
-# 		def test_gear_was_packed
-# 			assert app.gear.include?(Van), "Here is the packed gear: #{app.gear}. Notice that it's not Van. Like where it at?"
-# 		end
-#
-# 		# Tests that
-# 		def test_van_is_ancestor
-# 			assert app.ancestors.include?(Van), "Sorry but for some reason Van is not an ancestor: #{app.ancestors}."
-# 		end
+		def test_it_loads_good_kdl
+			unset_options()
+			write_kdl_different_kdl()
+			reloader.reload!
+			app.pack Van
 
+			assert app.options.has_key?(:database_settings), "We don't even have the database settings. #{app}"
+			dbs = app.options[:database_settings]
+			assert dbs[:adapter] == 'postgres', "Database adapter is wrong. #{ dbs[:adapter]}"
+			unset_options()
+		end
+
+		def unset_options
+			app.options[:database_settings] = {}
+		end
 	end
-rescue => error
-	warn "Skipping Defaults tests: "
-	warn "  Error: #{error}"
-end
-
-
+# rescue => error
+# 	warn "Skipping Defaults tests: "
+# 	warn "  Error: #{error}"
+# end

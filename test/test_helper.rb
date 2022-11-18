@@ -37,6 +37,11 @@ module CommandLineCommands
 		`rm -rf test/tmp` if File.exist?('test/tmp')
 	end
 
+	def reset_tmp
+		leave_tmp()
+		move_to_tmp()
+	end
+
 	# write file
 	def write(file, content)
 		raise "cannot write nil" unless file
@@ -173,18 +178,29 @@ TXT
 		write 'db/config.kdl', <<-TXT
 // config.kdl
 database {
-	default adapter="sqlite3" database="#{database}" host="localhost" pool=5 timeout=5000
+	default adapter="sqlite3" database="#{database}" host="localhost" max_connections=5 timeout=5000
 	development
 	production adapter="postgres" database="kow"
 }
 TXT
 	end
 
+	def write_kdl_different_kdl
+		write 'db/config.kdl', <<-KDL
+// config.kdl
+database {
+	default adapter="postgres" database="persplicity" host="198.172.0.1" max_connections=5 timeout=5000
+	development
+	production adapter="postgres" database="persplicity"
+}
+KDL
+	end
+
 	def write_bad_kdl
 			write 'db/bad.kdl', <<-TXT
 // bad.kdl
 database
-	default adapter="sqlite3" database="db/camping.db" host="localhost" pool=5 timeout=5000
+	default adapter="sqlite3" database="db/camping.db" host="localhost" max_connections=5 timeout=5000
 	development
 	production adapter="postgres" database="kow"
 }
@@ -319,6 +335,6 @@ end
 # TENT! a fake Camping App
 class Tent
 	def options
-		{host: nil, adapter: nil, database: nil, pool: nil}
+		{host: nil, adapter: nil, database: nil, max_connections: nil}
 	end
 end

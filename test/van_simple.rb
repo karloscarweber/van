@@ -16,23 +16,18 @@ begin
 
 		def setup
 			set_name :Simple
-			# move_to_tmp()
-			# write_rakefile()
+			move_to_tmp()
 
 			# the Camping reloader runs from the root for some reason,
 			# so when we reload a camping app we need to give it the current
 			# test/tmp directory as the location of the database, otherwise
 			# we'll create databases in the root of Guidebook which is not
 			# what we want.
-
-			# db_loc = Dir.pwd
-			# write_good_kdl(db_loc)
 			super
-			# run_make_db()
 		end
 
 		def teardown
-			# leave_tmp()
+			leave_tmp()
 			super
 		end
 
