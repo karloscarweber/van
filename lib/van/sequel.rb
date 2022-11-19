@@ -71,18 +71,6 @@ module Van
 			:host => host,
 			:max_connections => max_connections
 		})
-
-		# how to Establish the database connection.
-		# Because we're doing all of this in the setup method
-		# The connection will take place when this gear is packed.
-		# app::Models::Base.establish_connection(
-		#   :adapter => adapter,
-		#   :database => database,
-		#   :host => host,
-		#   :max_connections => max_connections
-		# )
-		# Interesting side effect. If we pack this gear into more than one app,
-		# Then each app will have a database connection to manage.
 	end
 
 	def self.load_sqlite3_stuff

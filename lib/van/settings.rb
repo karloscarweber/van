@@ -159,13 +159,6 @@ module Van
 
 		end
 
-		if config_file == nil
-			# warn("\nConfig File not found. Can't find it anywhere. Where's it at?", uplevel: 1)
-			# puts("\nConfig File not found. Can't find it anywhere. Where's it at?")
-		# else
-		# 	puts "config_file is not nil #{config_file}, in Directory: #{Dir.pwd},	files in directory: #{Dir.glob('*')}"
-		end
-
 		config_file
 	end
 
@@ -179,6 +172,7 @@ module Van
 		environment = ENV['environment'] ||= "development"
 
 		if stored_config == nil
+			# Maybe add a warning here
 			# puts "No Config file found, using defaults."
 			stored_config = defaults
 		end
@@ -220,21 +214,12 @@ module Van
 			end
 		end
 
-		# Overwrite any settings with directly added app settings.
-		# host            ||= app.options[:host]
-		# adapter         ||= app.options[:adapter]
-		# database        ||= app.options[:database]
-		# max_connections ||= app.options[:max_connections]
 		app.options[:database_settings] = app.options[:database_settings] ||= {}
 
 		host            = app.options[:database_settings][:host]            ||=  host
 		adapter         = app.options[:database_settings][:adapter]         ||=  adapter
 		database        = app.options[:database_settings][:database]        ||=  database
 		max_connections = app.options[:database_settings][:max_connections] ||=  max_connections
-
-		# puts "maybe we are getting this working?"
-		# puts "collapsedConfig: #{[host, adapter, database, max_connections]}"
-		# puts "stored_config: #{stored_config}"
 
 		{ collapsed_config: [host, adapter, database, max_connections], stored_config: stored_config }
 	end

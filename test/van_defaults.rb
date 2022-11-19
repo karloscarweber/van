@@ -4,7 +4,7 @@
 
 require 'test_helper'
 
-# begin
+begin
 
 	ENV["environment"] = "development"
 
@@ -27,6 +27,7 @@ require 'test_helper'
 			set_name :Defaults
 			move_to_tmp()
 			write_rakefile()
+			reloader.reload!
 
 			super
 		end
@@ -37,7 +38,6 @@ require 'test_helper'
 		end
 
 		def test_it_loads_defaults
-			reloader.reload!
 			app.pack Van
 			assert app.options.has_key?(:database_settings), "We don't even have the database settings. #{app}"
 			dbs = app.options[:database_settings]
@@ -48,17 +48,15 @@ require 'test_helper'
 		end
 
 		def test_it_loads_kdl_defaults
-			reloader.reload!
 			write_good_kdl(Dir.pwd)
 			@kdl = Van.parse_kdl("db/config.kdl")
 			# First test if we're even getting kdl back.
 			assert_equal 'KDL::Document', @kdl.class.to_s, "The returned object is nil, or at least it's not of class KDL::Document, Actual: #{@kdl.class.to_s}"
 		end
-#
+
 		def test_it_loads_good_kdl
 			unset_options()
 			write_kdl_different_kdl()
-			reloader.reload!
 			app.pack Van
 
 			assert app.options.has_key?(:database_settings), "We don't even have the database settings. #{app}"
@@ -71,7 +69,7 @@ require 'test_helper'
 			app.options[:database_settings] = {}
 		end
 	end
-# rescue => error
-# 	warn "Skipping Defaults tests: "
-# 	warn "  Error: #{error}"
-# end
+rescue => error
+	warn "Skipping Defaults tests: "
+	warn "  Error: #{error}"
+end
