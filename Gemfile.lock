@@ -41,7 +41,7 @@ GEM
     sequel (5.62.0)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
-    sqlite3 (1.5.3-arm64-darwin)
+    sqlite3 (1.6.0-arm64-darwin)
     tilt (2.0.11)
     unf (0.1.4)
       unf_ext
@@ -49,6 +49,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  arm64-darwin-22
 
 DEPENDENCIES
   camping!

@@ -8,9 +8,7 @@ begin
 	$:.unshift File.dirname(__FILE__) + '../../'
 	ENV["environment"] = "development"
 
-	class TestSimple < TestCase
-		include TestCaseReloader
-		include CommandLineCommands
+	class TestSimple < ReloadingTestCase
 		BASE = File.expand_path('../apps/simple', __FILE__)
 		def file; BASE + '.rb' end
 

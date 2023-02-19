@@ -16,11 +16,8 @@ begin
 		# pack(Van)
 	end
 
-	class Defaults::Test < TestCase
-		include CommandLineCommands
-		include TestCaseReloader
+	class Defaults::Test < ReloadingTestCase
 		BASE = File.expand_path('../apps/defaults', __FILE__)
-
 		def file; BASE + '.rb' end
 
 		def setup
@@ -64,6 +61,11 @@ begin
 			assert dbs[:adapter] == 'postgres', "Database adapter is wrong. #{ dbs[:adapter]}"
 			unset_options()
 		end
+
+		# def test_database_url_widget_thing_works
+		# 	database = { user: "kow", database: "homebase", port: "5352",  }
+		# 	assert_equal Van.database_url_from_settings(database), { user: "kow", database: "homebase", }
+		# end
 
 		def unset_options
 			app.options[:database_settings] = {}

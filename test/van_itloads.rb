@@ -16,7 +16,6 @@ begin
 	end
 
 	class ItLoads::Test < TestCase
-		# include TestCaseReloader
 		include CommandLineCommands
 
 		# leaving these commented out so that it's clear to me where to put setup and teardown stuff when the time arises.

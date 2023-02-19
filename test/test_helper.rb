@@ -207,39 +207,6 @@ database
 TXT
 	end
 
-	def write_bad_yaml
-		write_bad_yml_one
-		write_bad_yml_two
-		write_bad_yml_three
-	end
-
-	def write_bad_yml_one
-			write 'db/test_config_1.yml', <<-TXT
-// test_config_1.yml
-default:
-	database: kow
-TXT
-	end
-
-	def write_bad_yml_two
-		write 'db/test_config_2.yml', <<-TXT
-// test_config_2.yml
-default:
-	adapter: sqlite3
-	database: db/camping.db
-	host: localhost
-TXT
-	end
-
-	def write_bad_yml_three
-		write 'db/test_config_3.yml', <<-TXT
-// test_config_3.yml
-production:
-	adapter: postgres
-	database: kow
-TXT
-	end
-
 end
 
 # default TestCase Class for your tests.
@@ -294,19 +261,7 @@ end
 module TestCaseReloader
 	def reloader
 		@reloader ||= Camping::Reloader.new(file) do |app|
-			# app.establish_connection if app.respond_to?(:establish_connection)
-		end
-
-#     @reloader = Camping::Reloader.new(options[:script]) do |app|
-#
-#       # if !Camping::Models.autoload?(:Base) && options[:database]
-#       #   Camping::Models::Base.establish_connection(
-#       #     :adapter => 'sqlite3',
-#       #     :database => options[:database]
-#       #   )
-#       # end
-#
-#     end
+	end
 
 	end
 
@@ -315,7 +270,7 @@ module TestCaseReloader
 	end
 
 	def app_name
-		@app_name ||= :NoAppName
+		@app_name ||= :Default
 	end
 
 	def setup
@@ -330,6 +285,18 @@ module TestCaseReloader
 		reloader.remove_apps
 		assert !Object.const_defined?(app_name), "Reloader didn't remove app: #{app_name}."
 	end
+end
+
+class TestCase
+	include CommandLineCommands
+end
+
+class ReloadingTestCase < TestCase
+	include TestCaseReloader
+	def file; BASE + '.rb' end
+
+	# You'll need to rename this to the app that you're reloading.
+	BASE = File.expand_path('../apps/default', __FILE__)
 end
 
 # TENT! a fake Camping App
