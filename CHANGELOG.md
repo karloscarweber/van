@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+## [0.3.0] - 2023-02-18
+
+- Add some baseline tests to ensure it loads properly.
 
 ## [0.2.0] - 2022-11-17
 

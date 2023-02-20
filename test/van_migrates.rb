@@ -1,5 +1,5 @@
-# van_simple.rb
-# test if we just have our tests working.
+# van_migrate.rb
+# test if we can do migrations and stuff.
 
 require 'test_helper'
 
@@ -8,13 +8,17 @@ begin
 	$:.unshift File.dirname(__FILE__) + '../../'
 	ENV["environment"] = "development"
 
-	class TestSimple < ReloadingTestCase
-		BASE = File.expand_path('../apps/simple', __FILE__)
+	class TestMigrates < ReloadingTestCase
+		BASE = File.expand_path('../apps/migrates', __FILE__)
 		def file; BASE + '.rb' end
 
 		def setup
-			set_name :Simple
+			set_name :Migrates
 			move_to_tmp()
+			write_rakefile()
+			db_loc = Dir.pwd
+			write_good_kdl(db_loc)
+			reloader.reload!
 			super
 		end
 
@@ -29,5 +33,5 @@ begin
 	end
 
 rescue => error
-	warn "Skipping Simple tests #{error}"
+	warn "Skipping Migrates tests #{error}"
 end

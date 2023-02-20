@@ -5,9 +5,8 @@ require 'test_helper'
 
 begin
 
-	ENV["environment"] = "development"
-
 	$:.unshift File.dirname(__FILE__) + '../../'
+	ENV["environment"] = "development"
 
 	# setup camping app
 	Camping.goes :ItLoads
@@ -21,7 +20,6 @@ begin
 		# leaving these commented out so that it's clear to me where to put setup and teardown stuff when the time arises.
 		def setup
 			move_to_tmp()
-
 			db_loc = Dir.pwd
 			write_good_kdl(db_loc)
 			super
@@ -29,6 +27,7 @@ begin
 
 		def teardown
 			leave_tmp()
+			leave_shadow_db_dir()
 			super
 		end
 

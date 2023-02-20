@@ -6,15 +6,8 @@ require 'test_helper'
 
 begin
 
-	ENV["environment"] = "development"
-
 	$:.unshift File.dirname(__FILE__) + '../../'
-
-	# Camping.goes :Defaults
-
-	module Defaults
-		# pack(Van)
-	end
+	ENV["environment"] = "development"
 
 	class Defaults::Test < ReloadingTestCase
 		BASE = File.expand_path('../apps/defaults', __FILE__)
@@ -25,7 +18,6 @@ begin
 			move_to_tmp()
 			write_rakefile()
 			reloader.reload!
-
 			super
 		end
 

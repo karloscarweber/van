@@ -6,11 +6,14 @@ Welcome to your new gem! In this directory, you'll find the files you need to be
 
 ## ToDo
 
+- [ ] Migrations. Give Van Migrations. Register rake commands to generate migrations, run migrations, roll back migrations, etc...
 - [ ] Give Van the option to have a custom logger.
 - [ ] Make sure that Van passes along all custom options to whatever environment setup we have.
+- [ ] Respect database_urls being passed as settings.
+- [ ] Connect to PostgreSQL too. Like figure it out and test that it works.
 - [ ] Write the code to get config settings from kdl.
 - [ ] Figure out if we actually need to make a new Base Class with Sequel backing it.
-- [ ] Migrations?
+
 
 ## Installation
 

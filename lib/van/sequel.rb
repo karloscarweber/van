@@ -33,12 +33,10 @@ module Van
 				begin
 
 					if adapter == 'sqlite3' || adapter == 'sqlite'
-						Van.load_sqlite3_stuff()
+						Van.load_sqlite()
 						begin
-							# self.DB = Sequel.connect("sqlite://#{database}")
-							# puts "#{database}"
 							Van.fill_directories_if_empty(database)
-							self.DB ||= Sequel.sqlite("#{database}")
+							self.DB = Sequel.sqlite("#{database}")
 						rescue Sequel::DatabaseConnectionError => e
 							puts "Unable to connect to database: #{e}."
 							puts "database: #{database}."
@@ -46,11 +44,9 @@ module Van
 					end
 
 					if adapter == 'postgres'
-
 					end
 
 					if adapter == 'mysql'
-
 					end
 
 				rescue SQLite3::CantOpenException => e
@@ -103,7 +99,7 @@ module Van
 		app.establish_connection()
 	end
 
-	def self.load_sqlite3_stuff
+	def self.load_sqlite
 		begin
 			require 'sqlite3'
 		rescue LoadError => e
@@ -113,17 +109,14 @@ module Van
 
 	# makes nested directories for a file path if they don't exist.
 	def self.fill_directories_if_empty(db_location)
-		# puts "get's here #{db_location}"
 		splitted = db_location.split('/')
-		file = splitted.pop
+		splitted.pop
 		root = ""
 		splitted.each do |d|
+			break if d == ''
 			Dir.mkdir(root+d) unless Dir.exist?(root+d)
 			root << d << "/"
 		end
 	end
 
 end
-
-
-

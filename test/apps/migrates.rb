@@ -3,8 +3,8 @@
 require "camping"
 require_relative '../../lib/van.rb'
 
-Camping.goes :ItLoads
+Camping.goes :Migrates
 
-module ItLoads
-	pack(Van)
+module Migrates
+	pack Van
 end

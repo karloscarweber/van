@@ -37,6 +37,10 @@ module CommandLineCommands
 		`rm -rf test/tmp` if File.exist?('test/tmp')
 	end
 
+	def leave_shadow_db_dir
+		`rm -rf db` if File.exist?('db')
+	end
+
 	def reset_tmp
 		leave_tmp()
 		move_to_tmp()

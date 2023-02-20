@@ -31,7 +31,6 @@ module Van
 	# an optional silence_warnings parameter is set to false. This is used for
 	# testing.
 	def self.parse_kdl(config_file = nil, silence_warnings = false)
-		# kdl_string = File.open(config_file).read
 		begin
 			kdl_string = File.open(config_file).read
 		rescue => error # Errno::ENOENT
@@ -117,10 +116,10 @@ module Van
 		end
 
 		kdl_doc = nil
-		kdl_doc = self.parse_kdl(config_file)
+		kdl_doc = parse_kdl(config_file)
 
 		# database settings dictionary
-		db_sets = self.map_kdl(kdl_doc)
+		db_sets = map_kdl(kdl_doc)
 
 		# This merges the default data from the config file, or our lib defaults
 		# into each environment. If no kdl default is found then our lib defaults
