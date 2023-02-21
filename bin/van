@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/van"
+
+# commands = ARGV
+
+case ARGV[0]
+when "version", "-v"
+	puts Van.version
+when "generate", "g"
+	# puts "This is a generator"
+	VAN::Commands.generate(ARGV.drop(1))
+else
+	puts "help messages"
+	puts "#{ARGV}"
+end
+
+exit
