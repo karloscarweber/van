@@ -9,7 +9,7 @@ begin
 	ENV["environment"] = "development"
 
 	class TestSimple < ReloadingTestCase
-		BASE = File.expand_path('../apps/simple', __FILE__)
+		BASE = File.expand_path('../apps/simple/simple', __FILE__)
 		def file; BASE + '.rb' end
 
 		def setup

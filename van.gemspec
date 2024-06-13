@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["karloscarweber"]
   spec.email = ["me@kow.fm"]
 
-  spec.summary = "Sequel gem Wrapper for camping apps."
+  spec.summary = "Sequel for Camping apps."
   spec.description = "Van is a wrapper for the Sequel gem for use in Camping apps. Includes helpers to get things running, performing migrations, generators, and documentation."
   spec.homepage = "https://van.rubycamping.org"
   spec.license = "MIT"

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# require "bundler/gem_tasks"
+require "bundler/gem_tasks"
 
 require 'rake'
 require 'rake/task'
@@ -7,8 +7,8 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'tempfile'
 require 'open3'
-require 'van'
-require 'van/version'
+# require 'van'
+# require 'van/version'
 
 module Rake
 TESTOPTIONS = {}
@@ -23,9 +23,11 @@ task :test => 'test:all'
 namespace 'test' do
 
 	# all Tests
-	Rake::TestTask.new('all') do |t, args|
+	Rake::TestTask.new(:all) do |t, args|
 		t.libs << 'test'
 		t.libs.push 'lib'
 		t.test_files = FileList['test/van_*.rb']
+		# t.test_files = FileList['test/van_simple.rb']
 	end
+
 end

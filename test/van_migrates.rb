@@ -9,7 +9,7 @@ begin
 	ENV["environment"] = "development"
 
 	class TestMigrates < ReloadingTestCase
-		BASE = File.expand_path('../apps/migrates', __FILE__)
+		BASE = File.expand_path('../apps/migrates/migrates', __FILE__)
 		def file; BASE + '.rb' end
 
 		def setup
@@ -18,7 +18,7 @@ begin
 			write_rakefile()
 			db_loc = Dir.pwd
 			write_good_kdl(db_loc)
-			reloader.reload!
+			loader.reload!
 			super
 		end
 

@@ -10,7 +10,7 @@ begin
 	ENV["environment"] = "development"
 
 	class Defaults::Test < ReloadingTestCase
-		BASE = File.expand_path('../apps/defaults', __FILE__)
+		BASE = File.expand_path('../apps/defaults/defaults', __FILE__)
 		def file; BASE + '.rb' end
 
 		def setup
@@ -28,8 +28,8 @@ begin
 
 		def test_it_loads_defaults
 			app.pack Van
-			assert app.options.has_key?(:database_settings), "We don't even have the database settings. #{app}"
-			dbs = app.options[:database_settings]
+			assert app.options.has_key?(:database), "We don't even have the database settings. #{app}"
+			dbs = app.options[:database]
 			assert dbs[:adapter] == 'sqlite3', "Database adapter is wrong. #{ dbs[:adapter]}"
 			assert dbs[:database] == 'db/camping.db', "Default database name is wrong. #{ dbs[:database]}"
 			assert dbs[:host] == 'localhost', "Default host is wrong. #{ dbs[:host]}"
@@ -48,8 +48,8 @@ begin
 			write_kdl_different_kdl()
 			app.pack Van
 
-			assert app.options.has_key?(:database_settings), "We don't even have the database settings. #{app}"
-			dbs = app.options[:database_settings]
+			assert app.options.has_key?(:database), "We don't even have the database settings. #{app}"
+			dbs = app.options[:database]
 			assert dbs[:adapter] == 'postgres', "Database adapter is wrong. #{ dbs[:adapter]}"
 			unset_options()
 		end
@@ -60,7 +60,7 @@ begin
 		# end
 
 		def unset_options
-			app.options[:database_settings] = {}
+			app.options[:database] = {}
 		end
 	end
 rescue => error

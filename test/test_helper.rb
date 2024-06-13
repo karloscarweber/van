@@ -1,22 +1,20 @@
 $:.unshift File.dirname(__FILE__) + '/../lib'
 $:.unshift File.dirname(__FILE__) + '/../' # I think this will let us see db folder
 
-# test_helper.rb
 begin
 	require 'rubygems'
 rescue LoadError
 end
 
 require 'camping'
-require 'camping/reloader'
+require 'van'
 require 'minitest/autorun'
-require 'minitest'
-require 'minitest/spec'
 require 'rack/test'
 require "minitest/reporters"
+require 'minitest/hooks'
+require 'minitest/spec'
 require_relative '../lib/van.rb'
 require 'fileutils'
-
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
 
 $VERBOSE = nil
@@ -36,6 +34,30 @@ module CommandLineCommands
 		Dir.chdir @original_dir
 		`rm -rf test/tmp` if File.exist?('test/tmp')
 	end
+
+  # move_to_app
+  # Moves to an app directory,
+  # @app_name: String,
+  def move_to_app(app_name = "")
+    @original_dir = Dir.pwd
+		puts @original_dir
+    Dir.chdir "test"
+    Dir.chdir "apps"
+    Dir.chdir app_name
+    Dir.mkdir("apps") unless Dir.exist?("apps")
+    Dir.mkdir("lib") unless Dir.exist?("lib")
+  end
+
+	# leave_app
+	# Leaves an app directory and cleans up everything behind you.
+  def leave_app(app_name = "", purge_directorys = [])
+    Dir.chdir @original_dir
+
+		# Change to purge the Database Directories there.
+    # purge_directorys.each do |dir|
+    #   `rm -rf test/apps/#{app_name}/#{dir}` if File.exist?('test/apps/#{app_name}/#{dir}')
+    # end
+  end
 
 	def leave_shadow_db_dir
 		`rm -rf db` if File.exist?('db')
@@ -67,11 +89,11 @@ module CommandLineCommands
 	end
 
 	# runs a command on the command line, in the test directory
-	# def run_cmd(cmd)
-	#   result = `cd test/tmp && #{cmd} 2>&1`
-	#   raise result unless $?.success?
-	#   result
-	# end
+	def run_cmd(cmd)
+	  result = `cd test/tmp && #{cmd} 2>&1`
+	  raise result unless $?.success?
+	  result
+	end
 
 	def schema
 		ENV['SCHEMA'] || "db/schema.rb"
@@ -214,8 +236,10 @@ TXT
 end
 
 # default TestCase Class for your tests.
-class TestCase < MiniTest::Test
+class TestCase < Minitest::Test
 	include Rack::Test::Methods
+	include CommandLineCommands
+	include Minitest::Hooks
 
 	def self.inherited(mod)
 		mod.app = Object.const_get(mod.to_s[/\w+/])
@@ -224,6 +248,11 @@ class TestCase < MiniTest::Test
 
 	class << self
 		attr_accessor :app
+	end
+
+	def setup
+		super
+		Camping.make_camp
 	end
 
 	def body() last_response.body end
@@ -251,9 +280,10 @@ class TestCase < MiniTest::Test
 		assert_equal(code, last_response.status)
 	end
 
-	# def test_silly; end
-
+	def test_silly; end
 end
+
+require 'camping/loader'
 
 # A test case reloader for reloading Camping apps.
 # Used to freshly start up and spin down apps for the tests.
@@ -262,11 +292,9 @@ end
 # and to add a method that returns the file name for the reloader.:
 #   def file; BASE + '.rb' end
 # Additionally you'll need to inherit from  MiniTest::Test instead of TestCase
-module TestCaseReloader
-	def reloader
-		@reloader ||= Camping::Reloader.new(file) do |app|
-	end
-
+module TestCaseLoader
+	def loader
+		@loader ||= Camping::Loader.new(file)
 	end
 
 	def set_name(const)
@@ -277,16 +305,33 @@ module TestCaseReloader
 		@app_name ||= :Default
 	end
 
+	# 	def before_all
+	# 		super
+	# 		move_to_app app_name.to_s
+	# 		loader.reload!
+	# 		assert Object.const_defined?(:Reloader), "Reloader didn't load app"
+	# 		# puts "before_all called"
+	# 	end
+	#
+	# 	def after_all
+	# 		# puts "after_all called"
+	# 		assert Object.const_defined?(:Reloader), "Test removed app"
+	# 		loader.remove_constants
+	# 		assert !Object.const_defined?(:Reloader), "Loader didn't remove app"
+	# 		leave_app app_name.to_s
+	# 		super
+	# 	end
+
 	def setup
 		super
-		reloader.reload!
+		loader.reload!
 		assert Object.const_defined?(app_name), "Reloader didn't load app: #{app_name}."
 	end
 
 	def teardown
 		super
 		assert Object.const_defined?(app_name), "Test removed app: #{app_name}."
-		reloader.remove_apps
+		loader.remove_constants
 		assert !Object.const_defined?(app_name), "Reloader didn't remove app: #{app_name}."
 	end
 end
@@ -296,11 +341,19 @@ class TestCase
 end
 
 class ReloadingTestCase < TestCase
-	include TestCaseReloader
+	include TestCaseLoader
 	def file; BASE + '.rb' end
 
 	# You'll need to rename this to the app that you're reloading.
 	BASE = File.expand_path('../apps/default', __FILE__)
+
+	def setup
+		super
+		$counter = 0
+		loader.reload!
+		# puts "setup called"
+	end
+
 end
 
 # TENT! a fake Camping App

@@ -19,8 +19,8 @@ module Van
 		# Sets up a database constant with the connection settings
 		def establish_connection
 
-			if self.options.has_key? :database_settings
-				self.options[:database_settings] => {
+			if self.options.has_key? :database
+				self.options[:database] => {
 					adapter:,
 					# user:,
 					# password:,
@@ -85,7 +85,7 @@ module Van
 		host, adapter, database, max_connections, user, password, port = collapsed_config
 
 		# store the database settings into the app.
-		app.set(:database_settings, {
+		app.set(:database, {
 			:adapter => adapter,
 			:database => database,
 			:host => host,

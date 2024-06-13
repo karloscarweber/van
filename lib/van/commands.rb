@@ -7,7 +7,7 @@ rescue LoadError => e
 	raise "Sequel Gem could not be loaded (is it installed?): #{e.message}"
 end
 
-module VAN
+module Van
 
 	# This module parses commands then feeds those commands into, like, action places.
 	module Commands
@@ -27,7 +27,6 @@ module VAN
 			else
 				puts "help messages"
 			end
-
 
 		end
 

@@ -2,7 +2,5 @@
 
 module Van
   VERSION = '0.1.0'
-  def self.version
-    Van::VERSION
-  end
+  def self.version = VERSION
 end

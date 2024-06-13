@@ -1,10 +1,10 @@
 # simple.rb
 # The simple Camping app to test against.
 require "camping"
-require_relative '../../lib/van.rb'
+require_relative '../../../lib/van.rb'
 
-Camping.goes :Simple
+Camping.goes :Migrates
 
-module Simple
+module Migrates
 	pack Van
 end

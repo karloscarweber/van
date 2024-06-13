@@ -10,6 +10,45 @@ end
 
 module Van
 
+	module Migrations
+		class << self
+
+			def generate_migration(args)
+				migration = Migration.new(args)
+				# @@pipepointer = 0
+				puts args
+
+				# case args[0]
+				# when "version", "-v"
+				# 	puts Van.version
+				# else
+				# 	puts "help messages"
+				# end
+				# @@migration, @@pipepointer = nil
+			end
+
+			# migration generation utility classes
+			# returns a file name in the format: timestamp_migrationname.rb
+			#
+			def version_name()
+				# stamp = Time.now.strftime("%Y%m%d%H%M")
+				stamp = Time.now.strftime("%Y%jT%H%MZ")
+			end
+
+			# Configurator TBD
+			# def configure(options = {})
+				# Deprecations
+				# configuration
+			# end
+
+			def load_tasks(options = {})
+				# configure(options) # TBD
+			end
+
+		end
+
+	end
+
 	class Migration
 		@timestamp = Van::Migrations.version_name
 		@up_statments = []
@@ -43,11 +82,10 @@ module Van
 		end
 
 		# Use TABS to indent. for accessibility reasons
-		STREAM_START "Sequel.migration do\n"
-		UP_START "	up do\n"
-		DOWN_START "	down do\n"
+		STREAM_START = "Sequel.migration do\n"
+		UP_START = "	up do\n"
+		DOWN_START = "	down do\n"
 		ENDING = "end\n"
-
 
 		protected
 
@@ -95,46 +133,6 @@ module Van
 
 		# parse a column string
 
-
 	end
 
-
-	module Migrations
-		class << self
-
-			def generate_migration(args)
-				migration = Migration.new(args)
-				# @@pipepointer = 0
-				puts args
-
-				# case args[0]
-				# when "version", "-v"
-				# 	puts Van.version
-				# else
-				# 	puts "help messages"
-				# end
-				# @@migration, @@pipepointer = nil
-			end
-
-			# migration generation utility classes
-			# returns a file name in the format: timestamp_migrationname.rb
-			#
-			def version_name()
-				# stamp = Time.now.strftime("%Y%m%d%H%M")
-				stamp = Time.now.strftime("%Y%jT%H%MZ")
-			end
-
-			# Configurator TBD
-			# def configure(options = {})
-				# Deprecations
-				# configuration
-			# end
-
-			def load_tasks(options = {})
-				# configure(options) # TBD
-			end
-
-		end
-
-	end
 end
